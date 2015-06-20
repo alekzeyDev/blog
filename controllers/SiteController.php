@@ -8,6 +8,9 @@ use yii\web\Controller;
 use yii\filters\VerbFilter;
 use app\models\LoginForm;
 use app\models\ContactForm;
+use app\models\Post;
+use app\models\PostSearch;
+use yii\web\NotFoundHttpException;
 
 class SiteController extends Controller
 {
@@ -49,8 +52,14 @@ class SiteController extends Controller
 
     public function actionIndex()
     {
-        return $this->render('index');
-    }
+        $searchModel = new PostSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams,['status'=>'2']);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+        }
 
     public function actionLogin()
     {

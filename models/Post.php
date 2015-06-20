@@ -32,9 +32,10 @@ class Post extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'content', 'status', 'author_id'], 'required'],
-            [['content', 'tags'], 'string'],
-            [['status', 'create_time', 'update_time', 'author_id'], 'integer'],
+            [['title', 'content', 'status'], 'required'],
+            [['content','author_id'], 'string'],
+            [['status'], 'integer'],
+            [['create_time'], 'safe'],            
             [['title'], 'string', 'max' => 128]
         ];
     }
@@ -48,11 +49,9 @@ class Post extends \yii\db\ActiveRecord
             'id' => 'ID',
             'title' => 'Title',
             'content' => 'Content',
-            'tags' => 'Tags',
             'status' => 'Status',
             'create_time' => 'Create Time',
-            'update_time' => 'Update Time',
-            'author_id' => 'Author ID',
+            'author_id' => 'Author',
         ];
     }
 }
