@@ -12,10 +12,9 @@ use yii\filters\VerbFilter;
 /**
  * PostController implements the CRUD actions for Post model.
  */
-class PostController extends Controller
-{
-    public function behaviors()
-    {
+class PostController extends Controller {
+
+    public function behaviors() {
         return [
             'verbs' => [
                 'class' => VerbFilter::className(),
@@ -26,18 +25,35 @@ class PostController extends Controller
         ];
     }
 
+    public function beforeAction($action) {
+        if (parent::beforeAction($action)) {
+//            if (!\Yii::$app->user->can($action->id)) {
+            if (!\Yii::$app->user->can($action->id)) {
+                throw new \yii\web\ForbiddenHttpException('Access denied');
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * Lists all Post models.
      * @return mixed
      */
-    public function actionIndex()
-    {
+    public function actionIndex() {
+//        echo '<pre>';
+//        print_r(Yii::$app->user->isGuest);
+//        print_r(Yii::$app->user);
+////        print_r(Yii::$app->user->identity);
+//        
+//        exit;
         $searchModel = new PostSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
-            'searchModel' => $searchModel,
-            'dataProvider' => $dataProvider,
+                    'searchModel' => $searchModel,
+                    'dataProvider' => $dataProvider,
         ]);
     }
 
@@ -46,10 +62,9 @@ class PostController extends Controller
      * @param integer $id
      * @return mixed
      */
-    public function actionView($id)
-    {
+    public function actionView($id) {
         return $this->render('view', [
-            'model' => $this->findModel($id),
+                    'model' => $this->findModel($id),
         ]);
     }
 
@@ -58,17 +73,16 @@ class PostController extends Controller
      * If creation is successful, the browser will be redirected to the 'view' page.
      * @return mixed
      */
-    public function actionCreate()
-    {
+    public function actionCreate() {
         $model = new Post();
-$post=Yii::$app->request->post();
-$post[$model->formName()]['author_id'] = Yii::$app->user->identity->username;
+        $post = Yii::$app->request->post();
+        $post[$model->formName()]['author_id'] = Yii::$app->user->identity->username;
 
         if ($model->load($post) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('create', [
-                'model' => $model,
+                        'model' => $model,
             ]);
         }
     }
@@ -79,15 +93,14 @@ $post[$model->formName()]['author_id'] = Yii::$app->user->identity->username;
      * @param integer $id
      * @return mixed
      */
-    public function actionUpdate($id)
-    {
+    public function actionUpdate($id) {
         $model = $this->findModel($id);
 
         if ($model->load(Yii::$app->request->post()) && $model->save()) {
             return $this->redirect(['view', 'id' => $model->id]);
         } else {
             return $this->render('update', [
-                'model' => $model,
+                        'model' => $model,
             ]);
         }
     }
@@ -98,8 +111,7 @@ $post[$model->formName()]['author_id'] = Yii::$app->user->identity->username;
      * @param integer $id
      * @return mixed
      */
-    public function actionDelete($id)
-    {
+    public function actionDelete($id) {
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
@@ -112,12 +124,12 @@ $post[$model->formName()]['author_id'] = Yii::$app->user->identity->username;
      * @return Post the loaded model
      * @throws NotFoundHttpException if the model cannot be found
      */
-    protected function findModel($id)
-    {
+    protected function findModel($id) {
         if (($model = Post::findOne($id)) !== null) {
             return $model;
         } else {
             throw new NotFoundHttpException('The requested page does not exist.');
         }
     }
+
 }
