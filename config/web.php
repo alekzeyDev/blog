@@ -7,10 +7,6 @@ $config = [
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'components' => [
-        'authManager' => [
-            'class' => 'yii\rbac\PhpManager',
-            'defaultRoles' => ['admin', 'bloger'], // Здесь нет роли "guest", т.к. эта роль виртуальная и не присутствует в модели UserExt
-        ],
         'request' => [
             // !!! insert a secret key in the following (if it is empty) - this is required by cookie validation
             'cookieValidationKey' => 'EUwlqSF70klAEOYWW_NyX-_hISwNA3Rz',

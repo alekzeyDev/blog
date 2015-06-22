@@ -22,19 +22,17 @@ class PostController extends Controller {
                     'delete' => ['post'],
                 ],
             ],
+            'access' => [
+                'class' => \yii\filters\AccessControl::className(),
+                'only' => ['create', 'update', 'index', 'delete'],
+                'rules' => [
+                    [
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
         ];
-    }
-
-    public function beforeAction($action) {
-        if (parent::beforeAction($action)) {
-//            if (!\Yii::$app->user->can($action->id)) {
-            if (!\Yii::$app->user->can($action->id)) {
-                throw new \yii\web\ForbiddenHttpException('Access denied');
-            }
-            return true;
-        } else {
-            return false;
-        }
     }
 
     /**
@@ -42,12 +40,6 @@ class PostController extends Controller {
      * @return mixed
      */
     public function actionIndex() {
-//        echo '<pre>';
-//        print_r(Yii::$app->user->isGuest);
-//        print_r(Yii::$app->user);
-////        print_r(Yii::$app->user->identity);
-//        
-//        exit;
         $searchModel = new PostSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
